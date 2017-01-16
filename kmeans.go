@@ -160,11 +160,11 @@ func Kmeans(rawData [][]float64, k int, distanceFunction DistanceFunction, thres
 	return labels, err
 }
 
-func KmeansEuc(rawData [][]float64, k, threshold int) ([]ClusteredObservation, error) {
+func KmeansEuc(rawData [][]float64, k, threshold int) ([]ClusteredObservation, []Observation, error) {
 	data := make([]ClusteredObservation, len(rawData))
 	for ii, jj := range rawData {
 		data[ii].Observation = jj
 	}
 	seeds := seed(data, k, EuclideanDistance)
-	return kmeans(data, seeds, EuclideanDistance, threshold)
+	return kmeansWithCentroids(data, seeds, EuclideanDistance, threshold)
 }
