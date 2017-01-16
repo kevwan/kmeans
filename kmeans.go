@@ -103,7 +103,8 @@ func seed(data []ClusteredObservation, k int, distanceFunction DistanceFunction)
 }
 
 // K-Means Algorithm
-func kmeans(data []ClusteredObservation, mean []Observation, distanceFunction DistanceFunction, threshold int) ([]ClusteredObservation, error) {
+func kmeans(data []ClusteredObservation, mean []Observation, distanceFunction DistanceFunction, threshold int) (
+	[]ClusteredObservation, error) {
 	counter := 0
 	for ii, jj := range data {
 		closestCluster, _ := near(jj, mean, distanceFunction)
@@ -151,4 +152,13 @@ func Kmeans(rawData [][]float64, k int, distanceFunction DistanceFunction, thres
 		labels[ii] = jj.ClusterNumber
 	}
 	return labels, err
+}
+
+func KmeansEuc(rawData [][]float64, k, threshold int) ([]ClusteredObservation, error) {
+	data := make([]ClusteredObservation, len(rawData))
+	for ii, jj := range rawData {
+		data[ii].Observation = jj
+	}
+	seeds := seed(data, k, EuclideanDistance)
+	return kmeans(data, seeds, EuclideanDistance, threshold)
 }
