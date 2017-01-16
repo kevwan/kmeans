@@ -103,8 +103,8 @@ func seed(data []ClusteredObservation, k int, distanceFunction DistanceFunction)
 }
 
 // K-Means Algorithm
-func kmeans(data []ClusteredObservation, mean []Observation, distanceFunction DistanceFunction, threshold int) (
-	[]ClusteredObservation, error) {
+func kmeansWithCentroids(data []ClusteredObservation, mean []Observation, distanceFunction DistanceFunction,
+	threshold int) ([]ClusteredObservation, []Observation, error) {
 	counter := 0
 	for ii, jj := range data {
 		closestCluster, _ := near(jj, mean, distanceFunction)
@@ -132,10 +132,16 @@ func kmeans(data []ClusteredObservation, mean []Observation, distanceFunction Di
 		}
 		counter++
 		if changes == 0 || counter > threshold {
-			return data, nil
+			return data, mean, nil
 		}
 	}
-	return data, nil
+	return data, mean, nil
+}
+
+func kmeans(data []ClusteredObservation, mean []Observation, distanceFunction DistanceFunction,
+	threshold int) ([]ClusteredObservation, error) {
+	clustered, _, err := kmeansWithCentroids(data, mean, distanceFunction, threshold)
+	return clustered, err
 }
 
 // K-Means Algorithm with smart seeds
